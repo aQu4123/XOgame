@@ -12,20 +12,31 @@ def print_board():
     print(board[6:])
 
 def win_check(board: list, sign: str) -> bool:
-    for i in range(3):
+    """
+    Проверка победы
+
+    Эта функция принимает игровое поле, метку и проверяет есть ли победитель.
+    Победой является равенство 3ех ячеек и метки: по вертикали, по горизонтали и диагонали.
+
+    :param board: Проверяемое игровое поле
+    :param sign: Метка игрока, сделавшего ход.
+    :return: True если есть победная комбинация, False если её нет.
+    """
+    for i in range(3): #по горизонтали
         if board[(i-1)*3] == board[1+(i-1)*3] == board[2+(i-1)*3] == sign:
             return True
-    for j in range(3):
+    for j in range(3): #по вертикали
         if board[j-1] == board[j+2] == board[j+5] == sign:
             return True
-    if board[::4].count(sign) == 3:
+    if board[::4].count(sign) == 3: #по диагонали
         return True
-    elif board[2:7:2].count(sign) == 3:
+    elif board[2:7:2].count(sign) == 3: #по диагонали
         return True
     else:
         return False
 
 def play_time(func):
+    """Декоратор замеряющий продолжительность игры."""
     def wrapper(*args, **kwargs):
         start = time.time()
         result = func(*args, **kwargs)
@@ -57,11 +68,8 @@ def main_loop():
             else:
                 turns += 1
                 board[turn-1] = sign
-                # sign = 'O' if turns % 2 != 0 else 'X'
-                # player = 'Первый' if turns % 2 == 0 else 'Второй'
             if win_check(board, sign):
                 print_board()
-                # player = 'Первый' if turns % 2 != 0 else 'Второй'
                 print(f'Игра закончена: {player} игрок победил!')
                 break
             if turns == 9:
@@ -70,7 +78,7 @@ def main_loop():
                 break
             sign = 'O' if turns % 2 != 0 else 'X'
             player = 'Первый' if turns % 2 == 0 else 'Второй'
-        except (ValueError, IndexError):
+        except (ValueError, IndexError): #проверка ввода: тип данных и выход за пределы границы(индекс >9)
             print('Ошибка: некорректный ввод')
             continue
 
@@ -81,8 +89,8 @@ print('''
 ['4', '5', '6']
 ['7', '8', '9']
 Первый игрок = X 
-Второй игрок = O''')
-print()
+Второй игрок = O \n''')
+
 time.sleep(1)
 
 main_loop()
